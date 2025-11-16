@@ -10,8 +10,10 @@ COEFFS_V1: Dict[str, float] = {
     "f_geo": 0.7,
 }
 
+
 def logistic(z: float) -> float:
     return 100.0 / (1.0 + math.exp(-z))
+
 
 def risk_score_from_features(
     features: Dict[str, float],

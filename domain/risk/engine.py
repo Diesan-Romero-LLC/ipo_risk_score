@@ -1,8 +1,9 @@
-from .entities import IpoInput, RiskResult, RiskDriverDomain
+from .entities import IpoInput, RiskDriverDomain, RiskResult
 from .features import build_feature_vector
-from .logistic import risk_score_from_features, COEFFS_V1
+from .logistic import COEFFS_V1, risk_score_from_features
 
 MODEL_VERSION = "v1-logistic"
+
 
 def compute_ipo_risk(ipo: IpoInput) -> RiskResult:
     features = build_feature_vector(ipo)

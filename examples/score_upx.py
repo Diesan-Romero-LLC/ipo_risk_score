@@ -15,13 +15,13 @@ or (depending on your environment):
 
 from __future__ import annotations
 
+from domain.risk.engine import compute_ipo_risk
 from domain.risk.entities import (
     DealTermsDomain,
     FinancialSnapshotDomain,
     IpoInput,
     RiskResult,
 )
-from domain.risk.engine import compute_ipo_risk
 
 
 def build_upx_like_ipo() -> IpoInput:
@@ -49,10 +49,10 @@ def build_upx_like_ipo() -> IpoInput:
             net_margin=12.6,
             growth_yoy=43.9,
         ),
-        underwriter_tier=4,       # 1 = top tier, 5 = lowest tier
-        auditor_is_big4=False,    # non-Big4 auditor
-        sector_cyclicality=2,     # cyclical sector
-        region_risk_tier=2,       # higher-risk region
+        underwriter_tier=4,  # 1 = top tier, 5 = lowest tier
+        auditor_is_big4=False,  # non-Big4 auditor
+        sector_cyclicality=2,  # cyclical sector
+        region_risk_tier=2,  # higher-risk region
     )
 
 

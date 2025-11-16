@@ -1,12 +1,12 @@
 # IPO Risk Radar – Logistic-Bounded IPO Risk Score
 
-Author: **Diesan Romero**  
+Author: **Diesan Romero**
 Contact: `me@diesanromero.com`
 
-This repository contains a **logistic-bounded risk scoring framework** for Initial Public Offerings (IPOs).  
+This repository contains a **logistic-bounded risk scoring framework** for Initial Public Offerings (IPOs).
 The goal is to map multi-dimensional IPO characteristics into a **bounded risk score in [0, 100]**, where:
 
-- `0`  → lowest ex-ante risk  
+- `0`  → lowest ex-ante risk
 - `100` → highest ex-ante risk
 
 The project includes:

@@ -1,10 +1,10 @@
 from typing import Dict
 
 from ..entities import IpoInput
-from .liquidity import compute_liquidity_features
-from .valuation import compute_valuation_feature
-from .quality import compute_quality_features
 from .context import compute_context_features
+from .liquidity import compute_liquidity_features
+from .quality import compute_quality_features
+from .valuation import compute_valuation_feature
 
 
 def build_feature_vector(ipo: IpoInput) -> Dict[str, float]:

@@ -137,7 +137,7 @@ High-reputation underwriters (larger $U$) yield low $f_{\text{uw}}$, reducing ri
 
 We define a categorical feature indicating whether the auditor is one of the ``Big 4'':
 \[
-f_{\text{aud}} = 
+f_{\text{aud}} =
 \begin{cases}
 1, & \text{if auditor is non-Big-4},\\
 0, & \text{if auditor is Big-4}.
@@ -165,7 +165,7 @@ which lies in $[0,1]$ and reflects elevated risk for cyclical sectors in higher-
 Combining the above, a parsimonious specification is
 \begin{equation}
 \label{eq:z_full}
-    z = b_0 
+    z = b_0
       + b_{\text{liq}} f_{\text{liq-total}}
       + b_{\text{val}} f_{\text{val}}
       + b_{\text{uw}} f_{\text{uw}}
@@ -185,7 +185,7 @@ The ellipsis indicates potential extensions such as features derived from textua
 
 The derivative of $Risk$ with respect to $z$ is
 \begin{equation}
-    \frac{\partial Risk}{\partial z} 
+    \frac{\partial Risk}{\partial z}
     = 100 \cdot \frac{\exp(-z)}{(1 + \exp(-z))^2}.
 \end{equation}
 This quantity is maximized when $z = 0$ (i.e., $Risk = 50$), indicating that the model is most sensitive to incremental information around medium risk, which is desirable. IPOs already classified as very low or very high risk exhibit diminishing sensitivity to further changes in $z$.
@@ -203,10 +203,10 @@ Let $\mathcal{D} = \{(\mathbf{f}^{(k)}, y^{(k)})\}_{k=1}^{K}$ denote a dataset o
 
 We can fit a logistic regression model
 \begin{equation}
-    \Pr(y = 1 \mid \mathbf{f}) 
+    \Pr(y = 1 \mid \mathbf{f})
     = \frac{1}{1 + \exp\left( - (b_0 + \sum b_i f_i) \right)}.
 \end{equation}
-The estimated logit, $z(\mathbf{f}) = b_0 + \sum b_i f_i$, is then converted into a risk score via \eqref{eq:risk_logit}. 
+The estimated logit, $z(\mathbf{f}) = b_0 + \sum b_i f_i$, is then converted into a risk score via \eqref{eq:risk_logit}.
 
 Under this approach, the risk score is monotonic in the estimated probability of experiencing a large drawdown.
 
@@ -268,7 +268,7 @@ For illustration, consider the following coefficient vector (not empirically est
 
 Substituting into \eqref{eq:z_full}:
 \begin{align*}
-    z &= -2.0 
+    z &= -2.0
       + 3.0 \cdot 0.9
       + 2.5 \cdot 0.8
       + 1.5 \cdot 0.7
@@ -286,7 +286,7 @@ This value is too extreme for practical use, highlighting the importance of empi
 
 In practice, we may use smaller coefficients or rescale the features such that typical high-risk IPOs map to scores in the 60--80 range. For example, halving each coefficient:
 \begin{align*}
-    z' &= -1.0 
+    z' &= -1.0
       + 1.5 \cdot 0.9
       + 1.25 \cdot 0.8
       + 0.75 \cdot 0.7

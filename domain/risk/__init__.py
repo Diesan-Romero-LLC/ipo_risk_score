@@ -1,10 +1,10 @@
 from .engine import compute_ipo_risk
 from .entities import (
-    IpoInput,
     DealTermsDomain,
     FinancialSnapshotDomain,
-    RiskResult,
+    IpoInput,
     RiskDriverDomain,
+    RiskResult,
 )
 
 __all__ = [

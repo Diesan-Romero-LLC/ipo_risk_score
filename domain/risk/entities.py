@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
+
 
 @dataclass
 class DealTermsDomain:
@@ -9,12 +10,14 @@ class DealTermsDomain:
     free_float_pct: float
     lockup_days: int
 
+
 @dataclass
 class FinancialSnapshotDomain:
     revenue_ttm: float
     gross_margin: float
     net_margin: float
     growth_yoy: float
+
 
 @dataclass
 class IpoInput:
@@ -31,11 +34,13 @@ class IpoInput:
     sector_cyclicality: int
     region_risk_tier: int
 
+
 @dataclass
 class RiskDriverDomain:
     name: str
     contribution_points: float
     description: str
+
 
 @dataclass
 class RiskResult:

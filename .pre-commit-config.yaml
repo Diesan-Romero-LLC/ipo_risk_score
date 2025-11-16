@@ -1,0 +1,41 @@
+repos:
+  # -----------------------------
+  # 1) Trim trailing whitespace, fix EOF, etc. (basic hygiene)
+  # -----------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+
+  # -----------------------------
+  # 2) Ruff: lint (and auto-fix where possible)
+  # -----------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.1
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+        # You can restrict to python files only if desired:
+        # files: "\\.py$"
+
+  # -----------------------------
+  # 3) Black: formatting (optional but recommended)
+  # -----------------------------
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  # -----------------------------
+  # 4) MyPy (optional, type checking)
+  # -----------------------------
+  # Uncomment if/when you want strict typing in pre-commit
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.13.0
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies: []
