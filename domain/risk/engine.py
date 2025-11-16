@@ -1,0 +1,28 @@
+from .entities import IpoInput, RiskResult, RiskDriverDomain
+from .features import build_feature_vector
+from .logistic import risk_score_from_features, COEFFS_V1
+
+MODEL_VERSION = "v1-logistic"
+
+def compute_ipo_risk(ipo: IpoInput) -> RiskResult:
+    features = build_feature_vector(ipo)
+    risk = risk_score_from_features(features, COEFFS_V1)
+    attractiveness = 100.0 - risk
+
+    drivers = []
+    for name, value in features.items():
+        drivers.append(
+            RiskDriverDomain(
+                name=name,
+                contribution_points=round(100 * value, 1),
+                description=f"Normalized feature {name} = {value:.2f}",
+            )
+        )
+
+    return RiskResult(
+        risk_score=risk,
+        attractiveness_percent=attractiveness,
+        model_version=MODEL_VERSION,
+        drivers=drivers,
+        raw_features=features,
+    )

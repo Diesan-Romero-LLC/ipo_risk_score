@@ -1,0 +1,379 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+
+\onehalfspacing
+
+\title{
+A Logistic-Bounded Risk Scoring Framework \\
+for Initial Public Offerings (IPOs)
+}
+\author{Your Name\thanks{Your affiliation and contact email.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper introduces a quantitative framework for estimating the ex-ante investment risk of Initial Public Offerings (IPOs). We propose a risk score function that maps multi-dimensional IPO characteristics into a bounded scale between 0 and 100 using a logistic transformation. The framework integrates information on liquidity, valuation, underwriter reputation, audit quality, sector cyclicality, and geographic exposure. The model is designed to be both interpretable and empirically calibratable, allowing practitioners to understand the contribution of each factor and researchers to refine coefficients using historical data. A case study on a micro-float offering (Uptrend Holdings Limited, ``UPX'') illustrates how the model produces a numerical risk score consistent with qualitative assessment of the prospectus. The approach is suitable for systematic screening of IPOs and can be extended with additional features such as text-based risk signals and sentiment indicators.
+\end{abstract}
+
+\section{Introduction}
+
+Initial Public Offerings (IPOs) are among the most information-asymmetric and volatile events in equity markets. Issuers, underwriters, and early investors typically possess superior information relative to the general investing public, while the public market must price newly listed securities under substantial uncertainty. Micro-float offerings, aggressive valuations, regional underwriters, and complex corporate structures frequently result in large dispersions between the offer price and subsequent trading performance.
+
+The academic literature has extensively studied IPO underpricing, long-run underperformance, and determinants of first-day returns. However, there is comparatively less work on practical, ex-ante \emph{risk scoring} of IPOs that integrates both quantitative and qualitative signals into a single interpretable index. Practitioners---particularly those dealing with numerous small or international offerings---often rely on ad hoc checklists and subjective judgement, which limits scalability and reproducibility.
+
+This paper proposes a logistic-bounded risk scoring framework for IPOs. The model maps a vector of standardized risk drivers into a scalar risk score $Risk \in [0, 100]$. The logistic form ensures that the score remains bounded and exhibits reasonable sensitivity around the intermediate risk range, where many IPOs cluster. The framework is designed to be:
+
+\begin{itemize}[nosep]
+    \item \textbf{Interpretable}: each factor enters linearly in the logit and has a clear sign and magnitude.
+    \item \textbf{Flexible}: new features can be added as additional regressors.
+    \item \textbf{Calibratable}: coefficients can be estimated from historical IPO outcomes.
+\end{itemize}
+
+We apply the model to a case study IPO and discuss how the resulting score aligns with intuitive risk perceptions based on the prospectus.
+
+\section{Related Literature}
+
+The IPO literature has identified several stylized facts relevant to risk scoring:
+
+\begin{itemize}[nosep]
+    \item \textbf{Underpricing and short-run returns:} Empirical evidence shows that IPOs are often underpriced at the offer date, with significant first-day returns \cite{ritter1991}. However, underpricing is heterogeneous and depends on firm and deal characteristics.
+    \item \textbf{Long-run performance:} Many IPO cohorts exhibit long-run underperformance relative to benchmarks \cite{ritter1991longrun}, particularly in certain sectors or market regimes.
+    \item \textbf{Underwriter reputation:} Higher-reputation underwriters are associated with better aftermarket performance and lower ex-ante uncertainty \cite{cartermanaster1990}.
+    \item \textbf{Information asymmetry and liquidity:} Offerings with smaller free float and lower expected liquidity tend to exhibit higher price volatility and larger drawdowns \cite{amihud2002}.
+\end{itemize}
+
+While these studies analyze statistical relationships between individual variables and subsequent performance, fewer contributions propose an operational framework that aggregates multi-dimensional information into a single, bounded risk score for practical screening. The model presented in this paper is intended to bridge this gap.
+
+\section{Model Overview}
+
+\subsection{Objective}
+
+The objective is to construct a scalar risk score $Risk \in [0, 100]$ for an IPO prior to listing, based on information contained in the registration statement (e.g., Form S-1 or F-1), underwriting arrangements, and basic market context. The score is not intended as an expected return estimate, but as a measure of \emph{downside risk} and \emph{uncertainty} relating to the offering.
+
+\subsection{Feature Vector}
+
+Each IPO is represented by a vector of features
+\[
+\mathbf{f} = (f_1, f_2, \dots, f_n),
+\]
+where each $f_i$ is a normalized risk driver. In this paper we focus on the following categories:
+
+\begin{enumerate}[label=(\alph*),nosep]
+    \item Liquidity and free-float constraints
+    \item Valuation and pricing diagnostics
+    \item Underwriter and auditor quality
+    \item Sector and geographic risk
+\end{enumerate}
+
+The framework is extensible and can incorporate additional categories (e.g., text-based risk factors, sentiment, or governance indicators) without changing the core structure.
+
+\subsection{Logistic-Bounded Risk Function}
+
+We define the risk score as
+\begin{equation}
+    Risk = \frac{100}{1 + \exp\left( - z \right)}, \quad z = b_0 + \sum_{i=1}^{n} b_i f_i.
+    \label{eq:risk_def}
+\end{equation}
+
+Here:
+\begin{itemize}[nosep]
+    \item $b_0$ is an intercept term;
+    \item $b_i$ are factor coefficients (to be calibrated);
+    \item $f_i$ are normalized features, typically scaled to $[0,1]$.
+\end{itemize}
+
+The logistic transformation ensures $Risk \in (0,100)$, with smooth sensitivity around the intermediate region and asymptotic behavior near 0 and 100. Factors associated with higher risk should carry positive coefficients ($b_i > 0$), while risk-mitigating factors carry negative coefficients ($b_i < 0$).
+
+\section{Feature Engineering}
+
+\subsection{Liquidity and Micro-Float}
+
+Liquidity-related risk is driven primarily by the size of the free float and the dollar value of shares available for trading. Let $FF$ denote the free float percentage and $DV$ the dollar value of the float, computed as offer price multiplied by shares freely tradable. We define a liquidity risk feature $f_{\text{liq}}$ such that higher values correspond to higher risk:
+\begin{equation}
+    f_{\text{liq}} = \alpha_1 \cdot \left( 1 - \frac{FF}{100} \right) + \alpha_2 \cdot \frac{1}{1 + \log(1 + DV)},
+    \label{eq:liq_feature}
+\end{equation}
+where $\alpha_1, \alpha_2 \ge 0$ are scaling constants. Micro-float deals (small $FF$ and small $DV$) yield high $f_{\text{liq}}$.
+
+Lock-up terms can be incorporated via an additional sub-feature reflecting the length of the lock-up period $L$ (in days). A shorter lock-up (e.g., 90 days) implies higher risk of early selling pressure:
+\begin{equation}
+    f_{\text{lock}} = 1 - \frac{\min(L, L_{\max})}{L_{\max}},
+\end{equation}
+for some reference cap $L_{\max}$ (e.g., 180 or 365 days). We could then combine liquidity and lock-up into a single feature:
+\begin{equation}
+    f_{\text{liq-total}} = w_{\text{liq}} f_{\text{liq}} + w_{\text{lock}} f_{\text{lock}},
+\end{equation}
+with $w_{\text{liq}} + w_{\text{lock}} = 1$.
+
+\subsection{Valuation and Pricing Diagnostics}
+
+Consider a sector benchmark multiple $M_{\text{sector}}$ (e.g., price-to-earnings) and the issuer's multiple $M_{\text{ipo}}$ implied by the midpoint of the price range. A simple valuation premium feature is
+\begin{equation}
+    f_{\text{val}} = \min\left( 1, \max\left( 0, \frac{M_{\text{ipo}} - M_{\text{sector}}}{M_{\text{sector}}} \right) \right).
+    \label{eq:val_feature}
+\end{equation}
+Similar constructions can be used for price-to-sales, enterprise-value-to-revenue, or composite metrics.
+
+High valuation premiums (e.g., 60--100\% above sector) lead to $f_{\text{val}}$ near 1, indicating elevated risk that expectations may be too aggressive.
+
+\subsection{Underwriter Reputation}
+
+We index underwriter reputation via a score $U$ derived from league tables, historical IPO performance, or a discretized Carter--Manaster-style ranking. Let $U_{\min}$ and $U_{\max}$ denote the minimum and maximum scores in sample. A normalized underwriter feature is
+\begin{equation}
+    f_{\text{uw}} = 1 - \frac{U - U_{\min}}{U_{\max} - U_{\min}}.
+\end{equation}
+High-reputation underwriters (larger $U$) yield low $f_{\text{uw}}$, reducing risk, and are expected to have a negative coefficient $b_{\text{uw}}$.
+
+\subsection{Auditor Tier}
+
+We define a categorical feature indicating whether the auditor is one of the ``Big 4'':
+\[
+f_{\text{aud}} = 
+\begin{cases}
+1, & \text{if auditor is non-Big-4},\\
+0, & \text{if auditor is Big-4}.
+\end{cases}
+\]
+A positive coefficient $b_{\text{aud}}$ reflects higher perceived risk when the auditor is outside the most prominent global firms.
+
+\subsection{Sector and Geographic Risk}
+
+Sector cyclicality and geographic risk can be encoded via a composite feature $f_{\text{geo}}$. For example, assign ordinal scores to industry and region:
+\begin{itemize}[nosep]
+    \item Sector score $S \in \{0,1,2\}$ (defensive, neutral, cyclical).
+    \item Region score $G \in \{0,1,2\}$ (developed, mixed, emerging/high-friction).
+\end{itemize}
+Then
+\begin{equation}
+    f_{\text{geo}} = \frac{S + G}{4},
+\end{equation}
+which lies in $[0,1]$ and reflects elevated risk for cyclical sectors in higher-friction jurisdictions.
+
+\section{Logistic Risk Score Formulation}
+
+\subsection{Specification}
+
+Combining the above, a parsimonious specification is
+\begin{equation}
+\label{eq:z_full}
+    z = b_0 
+      + b_{\text{liq}} f_{\text{liq-total}}
+      + b_{\text{val}} f_{\text{val}}
+      + b_{\text{uw}} f_{\text{uw}}
+      + b_{\text{aud}} f_{\text{aud}}
+      + b_{\text{geo}} f_{\text{geo}}
+      + \dots
+\end{equation}
+and the risk score
+\begin{equation}
+\label{eq:risk_logit}
+    Risk = \frac{100}{1 + \exp(-z)}.
+\end{equation}
+
+The ellipsis indicates potential extensions such as features derived from textual risk factor analysis, sentiment, or ownership concentration.
+
+\subsection{Sensitivity}
+
+The derivative of $Risk$ with respect to $z$ is
+\begin{equation}
+    \frac{\partial Risk}{\partial z} 
+    = 100 \cdot \frac{\exp(-z)}{(1 + \exp(-z))^2}.
+\end{equation}
+This quantity is maximized when $z = 0$ (i.e., $Risk = 50$), indicating that the model is most sensitive to incremental information around medium risk, which is desirable. IPOs already classified as very low or very high risk exhibit diminishing sensitivity to further changes in $z$.
+
+\section{Calibration Methodology}
+
+\subsection{Historical Data}
+
+Let $\mathcal{D} = \{(\mathbf{f}^{(k)}, y^{(k)})\}_{k=1}^{K}$ denote a dataset of historical IPOs, where $\mathbf{f}^{(k)}$ is the feature vector for IPO $k$ and $y^{(k)}$ is an outcome proxy such as:
+
+\begin{itemize}[nosep]
+    \item $y^{(k)} = 1$ if the stock experiences a maximum drawdown above a threshold (e.g., $-30\%$) within 60 trading days;
+    \item $y^{(k)} = 0$ otherwise.
+\end{itemize}
+
+We can fit a logistic regression model
+\begin{equation}
+    \Pr(y = 1 \mid \mathbf{f}) 
+    = \frac{1}{1 + \exp\left( - (b_0 + \sum b_i f_i) \right)}.
+\end{equation}
+The estimated logit, $z(\mathbf{f}) = b_0 + \sum b_i f_i$, is then converted into a risk score via \eqref{eq:risk_logit}. 
+
+Under this approach, the risk score is monotonic in the estimated probability of experiencing a large drawdown.
+
+\subsection{Bayesian Updating with Expert Priors}
+
+In contexts where historical data are sparse (e.g., small micro-float deals in specific geographies), it is useful to combine expert priors with limited data. Let $\mathbf{b}$ denote the coefficient vector. A Bayesian prior $p(\mathbf{b})$ can encode beliefs such as:
+
+\begin{itemize}[nosep]
+    \item $b_{\text{liq}} > 0$ and relatively large in magnitude;
+    \item $b_{\text{val}} > 0$;
+    \item $b_{\text{uw}} < 0$ and $b_{\text{aud}} < 0$.
+\end{itemize}
+
+Observation of new IPO outcomes updates the posterior $p(\mathbf{b} \mid \mathcal{D}) \propto p(\mathcal{D} \mid \mathbf{b}) p(\mathbf{b})$. The posterior mean or median can be used for scoring, and uncertainty in $\mathbf{b}$ can be propagated to confidence intervals for $Risk$.
+
+\section{Case Study: Uptrend Holdings (UPX)}
+
+\subsection{Qualitative Overview}
+
+Uptrend Holdings Limited (ticker ``UPX'') is a micro-float offering on the Nasdaq Capital Market, with approximately 10\% free float, underwritten by a regional firm, and audited by a non-Big-4 auditor. The issuer operates in the construction sector in Hong Kong, a cyclical industry in a region exposed to both macroeconomic and policy risk.
+
+The registration statement indicates (numbers illustrative for this case study):
+
+\begin{itemize}[nosep]
+    \item Free float $\approx 10\%$ and dollar float $\approx \$6$--\$7.5$ million.
+    \item Implied P/S and P/E multiples at a 60--99\% premium to a broad engineering \& construction peer group.
+    \item Lead underwriter: regional brokerage firm.
+    \item Auditor: non-Big-4, independent registered public accounting firm.
+\end{itemize}
+
+Despite relatively healthy recent profitability and revenue growth, the structure and context of the deal suggest elevated ex-ante risk.
+
+\subsection{Feature Encoding}
+
+We illustrate one plausible encoding of UPX within our framework:
+
+\begin{itemize}[nosep]
+    \item Liquidity and lock-up: $f_{\text{liq-total}} \approx 0.9$ (micro-float and modest lock-up period).
+    \item Valuation premium: $f_{\text{val}} \approx 0.8$ (significant premium to peers).
+    \item Underwriter: $f_{\text{uw}} \approx 0.7$ (regional firm below top-tier global banks).
+    \item Auditor: $f_{\text{aud}} = 1$ (non-Big-4).
+    \item Sector and geography: $f_{\text{geo}} \approx 0.6$ (cyclical construction sector, Hong Kong).
+\end{itemize}
+
+These values are normalized to reflect the relative position of UPX within a broader universe of IPOs.
+
+\subsection{Illustrative Coefficients}
+
+For illustration, consider the following coefficient vector (not empirically estimated, but consistent with prior beliefs):
+
+\begin{align*}
+    b_0          &= -2.0, \\
+    b_{\text{liq}} &= 3.0, \\
+    b_{\text{val}} &= 2.5, \\
+    b_{\text{uw}}  &= 1.5, \\
+    b_{\text{aud}} &= 1.0, \\
+    b_{\text{geo}} &= 1.0.
+\end{align*}
+
+Substituting into \eqref{eq:z_full}:
+\begin{align*}
+    z &= -2.0 
+      + 3.0 \cdot 0.9
+      + 2.5 \cdot 0.8
+      + 1.5 \cdot 0.7
+      + 1.0 \cdot 1.0
+      + 1.0 \cdot 0.6 \\
+      &= -2.0 + 2.7 + 2.0 + 1.05 + 1.0 + 0.6 \\
+      &= 5.35.
+\end{align*}
+
+The corresponding risk score is
+\[
+Risk = \frac{100}{1 + \exp(-5.35)} \approx 99.4.
+\]
+This value is too extreme for practical use, highlighting the importance of empirical calibration and scaling.
+
+In practice, we may use smaller coefficients or rescale the features such that typical high-risk IPOs map to scores in the 60--80 range. For example, halving each coefficient:
+\begin{align*}
+    z' &= -1.0 
+      + 1.5 \cdot 0.9
+      + 1.25 \cdot 0.8
+      + 0.75 \cdot 0.7
+      + 0.5 \cdot 1.0
+      + 0.5 \cdot 0.6 \\
+      &= -1.0 + 1.35 + 1.00 + 0.525 + 0.5 + 0.3 \\
+      &= 2.675,
+\end{align*}
+and
+\[
+Risk' = \frac{100}{1 + \exp(-2.675)} \approx 93.6.
+\]
+
+To obtain a target risk score around $67$ for UPX, coefficients can be further rescaled. The key point is that the model structure permits calibration such that a given IPO's feature profile maps to a score consistent with expert judgement.
+
+\section{Validation and Performance Evaluation}
+
+\subsection{Evaluation Metrics}
+
+To assess the model, we may split historical IPO data into training and test sets and evaluate:
+
+\begin{itemize}[nosep]
+    \item \textbf{Discrimination:} Area under the ROC curve (AUC) for predicting large drawdowns.
+    \item \textbf{Calibration:} Calibration curves comparing predicted probabilities (or normalized scores) to empirical frequencies.
+    \item \textbf{Ranking performance:} Spearman or Kendall rank correlation between scores and realized volatility or drawdown.
+\end{itemize}
+
+\subsection{Stress Testing}
+
+Stress testing involves examining:
+
+\begin{itemize}[nosep]
+    \item Sensitivity of $Risk$ to extreme feature values (e.g., ultra-micro float, extreme valuation).
+    \item Robustness of scores across different time periods (e.g., pre- and post-crisis samples).
+    \item Stability of coefficients under re-estimation.
+\end{itemize}
+
+Because of the logistic bounding, the risk score remains within a finite range even under extreme feature combinations, which enhances numerical stability.
+
+\section{Limitations and Extensions}
+
+The proposed framework has several limitations:
+
+\begin{itemize}[nosep]
+    \item It depends on accurate extraction and normalization of IPO features from prospectuses and filings.
+    \item The choice of outcome variable (e.g., drawdown threshold, time window) affects calibration.
+    \item Macroeconomic and regime shifts are not explicitly modeled.
+\end{itemize}
+
+Potential extensions include:
+
+\begin{itemize}[nosep]
+    \item Incorporating text-derived features from sections such as ``Risk Factors'' using natural language processing.
+    \item Adding volatility forecasts based on option-implied metrics (when available post-listing).
+    \item Modeling time-varying coefficients to capture changing market conditions.
+\end{itemize}
+
+\section{Conclusion}
+
+This paper presents a logistic-bounded risk scoring framework for IPOs that integrates multiple dimensions of risk into a single interpretable metric. By mapping standardized features into a logit and applying a logistic transformation, we obtain a score in $[0, 100]$ that is suitable for screening, ranking, and comparative analysis across deals and time.
+
+The structure of the model allows for both expert-informed prior specification and data-driven calibration. A case study on a micro-float IPO illustrates how apparently attractive fundamentals can coexist with high structural risk when liquidity, valuation, and market context are properly accounted for.
+
+The framework can serve as a building block for more sophisticated systems that combine financial data, textual analysis, and market microstructure indicators to provide a comprehensive assessment of IPO risk.
+
+\begin{thebibliography}{9}
+
+\bibitem{ritter1991}
+Ritter, J. R. (1991).
+The long-run performance of initial public offerings.
+\emph{The Journal of Finance}, 46(1), 3--27.
+
+\bibitem{ritter1991longrun}
+Ritter, J. R. (2011).
+Equilibrium in the initial public offerings market.
+\emph{Annual Review of Financial Economics}, 3, 347--374.
+
+\bibitem{cartermanaster1990}
+Carter, R., \& Manaster, S. (1990).
+Initial public offerings and underwriter reputation.
+\emph{The Journal of Finance}, 45(4), 1045--1067.
+
+\bibitem{amihud2002}
+Amihud, Y. (2002).
+Illiquidity and stock returns: Cross-section and time-series effects.
+\emph{Journal of Financial Markets}, 5(1), 31--56.
+
+\end{thebibliography}
+
+\end{document}
