@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipo-risk-score"
+version = "0.1.0"
+description = "Logistic-bounded IPO risk scoring framework."
+readme = "README.md"
+authors = [
+    { name = "Diesan Romero", email = "me@diesanromero.com" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.9"
+keywords = ["ipo", "risk", "finance", "quant", "logistic-model", "markets"]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.1.0",
+    "black>=24.0",
+    "mypy>=1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Diesan-Romero-LLC/ipo_risk_score"
+Repository = "https://github.com/Diesan-Romero-LLC/ipo_risk_score"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+include = ["domain*", "examples*"]
+
+# =====================================================================
+# TOOL CONFIGURATION
+# =====================================================================
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-vv"
+
+[tool.ruff]
+exclude = ["build", "dist", ".venv", ".pytest_cache"]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = []
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_return_any = false
+strict_optional = false
