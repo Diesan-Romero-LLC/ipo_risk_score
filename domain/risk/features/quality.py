@@ -10,7 +10,7 @@ def compute_quality_features(ipo: IpoInput) -> Dict[str, float]:
         - f_uw:  underwriter quality (higher => more risk)
         - f_aud: auditor quality (1 if non-Big4, 0 if Big4)
     """
-    # underwriter_tier is expected in [1, 5] where 1 = best, 5 = weakest
+    # underwriter_tier is expected in [1, 5] where 1 = best, 5 = weakest.
     f_uw_raw = (ipo.underwriter_tier - 1) / 4.0
     f_uw = max(0.0, min(f_uw_raw, 1.0))
 

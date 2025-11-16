@@ -3,14 +3,6 @@ Example: scoring an UPX-like IPO using the IPO Risk Score model.
 
 This script builds an IpoInput instance for a micro-float IPO similar to
 Uptrend Holdings Limited ("UPX") and computes its risk score.
-
-You can run it from the project root with:
-
-    python -m examples.score_upx
-
-or (depending on your environment):
-
-    python examples/score_upx.py
 """
 
 from __future__ import annotations
@@ -71,7 +63,6 @@ def print_risk_result(result: RiskResult) -> None:
             f"({driver.description})"
         )
 
-    # Optional: print raw feature values for debugging
     print("\nRaw features:")
     for name, value in result.raw_features.items():
         print(f"  {name:<12} = {value:.4f}")

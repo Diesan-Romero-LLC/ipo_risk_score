@@ -22,16 +22,16 @@ def build_feature_vector(ipo: IpoInput) -> Dict[str, float]:
     """
     features: Dict[str, float] = {}
 
-    # Liquidity-related features (includes f_liq_total)
+    # Liquidity-related features (includes f_liq_total).
     features.update(compute_liquidity_features(ipo))
 
-    # Valuation
+    # Valuation.
     features["f_val"] = compute_valuation_feature(ipo)
 
-    # Deal/reporting quality
+    # Deal/reporting quality.
     features.update(compute_quality_features(ipo))
 
-    # Sector / geographic context
+    # Sector / geographic context.
     features.update(compute_context_features(ipo))
 
     return features

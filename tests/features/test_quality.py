@@ -29,5 +29,5 @@ def test_quality_features_valid_range():
 
     feats = compute_quality_features(ipo)
 
-    assert feats["f_uw"] == 1.0  # worst tier -> highest risk
-    assert feats["f_aud"] == 1.0  # non-Big4 -> risk = 1
+    assert feats["f_uw"] == 1.0
+    assert feats["f_aud"] == 1.0

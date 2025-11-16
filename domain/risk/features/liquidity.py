@@ -23,11 +23,9 @@ def _liquidity_core(free_float_pct: float, dollar_float: float) -> float:
 
     Higher values => higher liquidity risk.
     """
-    # Free-float component: low free float => high risk
     ff_pct_clamped = min(max(free_float_pct, 0.0), 100.0)
     ff_component = 1.0 - ff_pct_clamped / 100.0
 
-    # Dollar float component: very small dollar float => high risk
     safe_dollar_float = max(dollar_float, 0.0)
     dv_component = 1.0 / (1.0 + math.log1p(safe_dollar_float))
 
@@ -43,7 +41,6 @@ def _lockup_feature(lockup_days: int) -> float:
         f_lock = 1 - min(L, L_max) / L_max
     """
     if DEFAULT_LOCKUP_MAX_DAYS <= 0:
-        # Degenerate config, treat as "no extra lock-up risk"
         return 0.0
 
     capped_days = min(max(lockup_days, 0), DEFAULT_LOCKUP_MAX_DAYS)
@@ -55,15 +52,18 @@ def compute_liquidity_features(ipo: IpoInput) -> Dict[str, float]:
     """
     Compute all liquidity-related features for a given IPO.
 
-    Returns a dict with at least:
-        - "f_liq":      core liquidity feature
-        - "f_lock":     lock-up feature
-        - "f_liq_total": combined liquidity + lock-up feature
+    Returns:
+        - f_liq: core liquidity risk
+        - f_lock: lock-up risk
+        - f_liq_total: combined liquidity + lock-up feature
     """
     offer_mid = (ipo.deal_terms.price_low + ipo.deal_terms.price_high) / 2.0
     offer_usd = offer_mid * ipo.deal_terms.offer_shares
 
-    free_float_fraction = min(max(ipo.deal_terms.free_float_pct, 0.0) / 100.0, 1.0)
+    free_float_fraction = min(
+        max(ipo.deal_terms.free_float_pct, 0.0) / 100.0,
+        1.0,
+    )
     dollar_float = offer_usd * free_float_fraction
 
     f_liq = _liquidity_core(
