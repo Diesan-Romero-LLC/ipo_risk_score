@@ -45,6 +45,8 @@ def build_upx_like_ipo() -> IpoInput:
         auditor_is_big4=False,  # non-Big4 auditor
         sector_cyclicality=2,  # cyclical sector
         region_risk_tier=2,  # higher-risk region
+        # Example sector price-to-sales multiple (e.g. peer group PS)
+        sector_ps_multiple=1.5,
     )
 
 

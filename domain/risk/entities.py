@@ -34,6 +34,9 @@ class IpoInput:
     sector_cyclicality: int
     region_risk_tier: int
 
+    # New: sector price-to-sales multiple used to compute valuation premium.
+    sector_ps_multiple: Optional[float] = None
+
 
 @dataclass
 class RiskDriverDomain:

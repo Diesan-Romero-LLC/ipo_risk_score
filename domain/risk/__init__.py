@@ -1,3 +1,10 @@
+"""
+Risk scoring subpackage for the IPO Risk Score model.
+
+This package exposes the high-level API (`compute_ipo_risk`) and domain types
+used by the model.
+"""
+
 from .engine import compute_ipo_risk
 from .entities import (
     DealTermsDomain,
@@ -8,10 +15,10 @@ from .entities import (
 )
 
 __all__ = [
-    "compute_ipo_risk",
-    "IpoInput",
     "DealTermsDomain",
     "FinancialSnapshotDomain",
-    "RiskResult",
+    "IpoInput",
     "RiskDriverDomain",
+    "RiskResult",
+    "compute_ipo_risk",
 ]

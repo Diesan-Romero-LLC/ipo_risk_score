@@ -143,6 +143,12 @@ def _validate_categorical(ipo: IpoInput) -> None:
     if ipo.region_risk_tier not in (0, 1, 2):
         raise ValidationError("region_risk_tier must be in {0, 1, 2}")
 
+    # Validate sector price-to-sales multiple if provided
+    if ipo.sector_ps_multiple is not None:
+        _ensure_finite("sector_ps_multiple", ipo.sector_ps_multiple)
+        if ipo.sector_ps_multiple <= 0:
+            raise ValidationError("sector_ps_multiple must be > 0")
+
 
 # ---------------------------------------------------------------------------
 # Public API
