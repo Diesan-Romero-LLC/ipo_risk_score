@@ -25,16 +25,12 @@ class IpoInput:
     company_name: Optional[str]
     country: Optional[str]
     sector: Optional[str]
-
     deal_terms: DealTermsDomain
     financials: FinancialSnapshotDomain
-
     underwriter_tier: int
     auditor_is_big4: bool
     sector_cyclicality: int
     region_risk_tier: int
-
-    # New: sector price-to-sales multiple used to compute valuation premium.
     sector_ps_multiple: Optional[float] = None
 
 
@@ -48,7 +44,8 @@ class RiskDriverDomain:
 @dataclass
 class RiskResult:
     risk_score: float
-    attractiveness_percent: float
+    # Optional: attractiveness is (100 - risk). None if include_attractiveness=False.
+    attractiveness_percent: Optional[float]
     model_version: str
     drivers: List[RiskDriverDomain]
     raw_features: Dict[str, float]
