@@ -2,13 +2,36 @@ import math
 from typing import Dict
 
 # Heuristic coefficients for model version v1.
-# These should be calibrated with historical data.
+# These should be calibrated with historical data. They represent a
+# reasonable starting point if no other calibration is available.
 COEFFS_V1: Dict[str, float] = {
     "intercept": -0.5,
     "f_liq_total": 2.0,
     "f_val": 1.0,
     "f_uw": 1.5,
     "f_aud": 1.5,
+    "f_geo": 1.0,
+}
+
+# Example coefficients derived from the formulas presented in the
+# ipo_risk_score.tex document.  These values mirror the relative
+# importance of each feature as described in the paper.  They are
+# provided as an alternative to the default `COEFFS_V1` for users who
+# wish to more closely follow the theoretical model.  If the paper
+# changes or more precise calibration becomes available, these values
+# can be updated accordingly.
+COEFFS_TEX_EXAMPLE: Dict[str, float] = {
+    # Intercept representing the baseline logit when all features are zero.
+    # The paper discusses using a bias term to centre the logistic curve.
+    "intercept": -0.5,
+    # Liquidity is generally considered the most important driver.
+    "f_liq_total": 2.0,
+    # Valuation relative premium has significant influence.
+    "f_val": 2.0,
+    # Underwriter quality and auditor quality contribute meaningfully.
+    "f_uw": 1.5,
+    "f_aud": 1.5,
+    # Sector/geographic risk has a smaller weight.
     "f_geo": 1.0,
 }
 

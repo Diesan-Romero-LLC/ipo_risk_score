@@ -13,6 +13,7 @@ from .entities import (
     RiskDriverDomain,
     RiskResult,
 )
+from .logistic import COEFFS_TEX_EXAMPLE, COEFFS_V1, risk_score_from_features
 
 __all__ = [
     "DealTermsDomain",
@@ -21,4 +22,7 @@ __all__ = [
     "RiskDriverDomain",
     "RiskResult",
     "compute_ipo_risk",
+    "COEFFS_V1",
+    "COEFFS_TEX_EXAMPLE",
+    "risk_score_from_features",
 ]
