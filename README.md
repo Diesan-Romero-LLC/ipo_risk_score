@@ -1,4 +1,4 @@
-```
+
 # IPO Risk Score
 
 This project contains a prototype implementation of the **IPO Risk Score** model, a logistic-bounded framework for estimating the ex-ante investment risk of initial public offerings (IPOs). The model maps multiple normalized risk factors into a single score between 0 and 100.
