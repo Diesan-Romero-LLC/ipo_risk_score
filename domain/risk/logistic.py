@@ -21,6 +21,8 @@ COEFFS_V1: Dict[str, float] = {
     # Financial strength.  Higher values indicate weaker profitability or
     # growth and thus higher risk.  Included with weight 1.0 by default.
     "f_fin": 1.0,
+    # Textual sentiment risk (neutral baseline).  Negative tone raises risk.
+    "f_text": 0.5,
 }
 
 # Example coefficients derived from the formulas presented in the
@@ -35,6 +37,8 @@ COEFFS_TEX_EXAMPLE: Dict[str, float] = {
     "f_geo": 1.0,
     # Financial strength weight (moderate).
     "f_fin": 1.0,
+    # Example textual sentiment weight mirroring theoretical feature.
+    "f_text": 0.5,
 }
 
 LOGIT_CLIP = 30.0  # protects against overflow in exp()

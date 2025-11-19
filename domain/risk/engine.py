@@ -61,11 +61,19 @@ def compute_ipo_risk(
 
     drivers: List[RiskDriverDomain] = []
     for name, value in features.items():
+        coeff = coeffs_to_use.get(name)
+        if coeff is None:
+            # Skip features that do not influence the active coefficient set.
+            continue
+        contribution = coeff * value
         drivers.append(
             RiskDriverDomain(
                 name=name,
-                contribution_points=round(100 * value, 1),
-                description=f"Normalized feature {name} = {value:.2f}",
+                contribution_points=round(contribution, 4),
+                description=(
+                    f"{name}: value {value:.2f} * weight {coeff:.2f} "
+                    f"≈ {contribution:.3f} logit points"
+                ),
             )
         )
 

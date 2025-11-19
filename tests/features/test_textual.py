@@ -1,5 +1,6 @@
 """Pruebas para el feature de sentimiento textual."""
 
+from domain.risk.engine import compute_ipo_risk
 from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
 from domain.risk.features.textual import compute_textual_features
 
@@ -52,3 +53,17 @@ def test_textual_feature_negative_sentiment() -> None:
     text = "Volatile markets y uncertain competition pueden conducir a decline y loss."
     feats = compute_textual_features(ipo, text)
     assert feats["f_text"] > 0.5
+
+
+def test_engine_risk_score_reflects_textual_sentiment() -> None:
+    """El puntaje final debe aumentar con texto negativo respecto a uno positivo."""
+    positive_text = "Strong growth y robust profit indican opportunity."
+    negative_text = "Uncertain and volatile decline implica competition y loss."
+
+    ipo_positive = _dummy_ipo()
+    ipo_negative = _dummy_ipo()
+
+    result_positive = compute_ipo_risk(ipo_positive, prospectus_text=positive_text)
+    result_negative = compute_ipo_risk(ipo_negative, prospectus_text=negative_text)
+
+    assert result_negative.risk_score > result_positive.risk_score
