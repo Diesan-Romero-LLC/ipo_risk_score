@@ -1,14 +1,15 @@
-from typing import Dict
+from typing import Dict, Optional
 
 from ..entities import IpoInput
 from .context import compute_context_features
 from .financials import compute_financial_features
 from .liquidity import compute_liquidity_features
 from .quality import compute_quality_features
+from .textual import compute_textual_features
 from .valuation import compute_valuation_feature
 
 
-def build_feature_vector(ipo: IpoInput) -> Dict[str, float]:
+def build_feature_vector(ipo: IpoInput, prospectus_text: Optional[str] = None) -> Dict[str, float]:
     """
     Assemble all features into a flat dict with values in [0,1].
     """
@@ -18,4 +19,5 @@ def build_feature_vector(ipo: IpoInput) -> Dict[str, float]:
     features.update(compute_quality_features(ipo))
     features.update(compute_context_features(ipo))
     features.update(compute_financial_features(ipo))
+    features.update(compute_textual_features(ipo, prospectus_text))
     return features
