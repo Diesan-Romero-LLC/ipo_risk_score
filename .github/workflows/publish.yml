@@ -42,7 +42,13 @@ jobs:
           # Tag comes from input (manual dispatch) or the ref (release event)
           tag_input = os.environ.get("TAG_INPUT") or ""
           ref = os.environ.get("GITHUB_REF", "")
-          tag = tag_input or ref.rsplit("/", 1)[-1]
+
+          ref_tag = ref.rsplit("/", 1)[-1] if ref.startswith("refs/tags/") else ""
+          tag = tag_input or ref_tag
+
+          if not tag:
+            print("::error::No tag provided. For workflow_dispatch, pass the tag input (e.g., v0.1.0); for releases, ensure the workflow runs on a tag.")
+            sys.exit(1)
 
           expected_tag = f"v{version}"
           if tag != expected_tag:
