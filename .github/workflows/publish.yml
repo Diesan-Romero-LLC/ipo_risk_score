@@ -29,7 +29,11 @@ jobs:
       - name: Validate tag matches project version
         id: version_check
         run: |
-          import pathlib, sys, tomllib, os
+          python - <<'PY'
+          import os
+          import pathlib
+          import sys
+          import tomllib
 
           pyproject = pathlib.Path("pyproject.toml")
           data = tomllib.loads(pyproject.read_text())
@@ -45,6 +49,7 @@ jobs:
             print(f"::error::Tag '{tag}' does not match project version '{version}' (expected {expected_tag})")
             sys.exit(1)
           print(f"Version {version} matches tag {tag}")
+          PY
         env:
           TAG_INPUT: ${{ github.event.inputs.tag }}
 
