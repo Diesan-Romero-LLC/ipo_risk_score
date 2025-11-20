@@ -1,11 +1,11 @@
 """Pruebas básicas y de casos límite para la función compute_financial_features."""
 
-from domain.risk.entities import (
+from ipo_risk_score.domain.risk.entities import (
     DealTermsDomain,
     FinancialSnapshotDomain,
     IpoInput,
 )
-from domain.risk.features.financials import compute_financial_features
+from ipo_risk_score.domain.risk.features.financials import compute_financial_features
 
 
 def test_financial_feature_range() -> None:

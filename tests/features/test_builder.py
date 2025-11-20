@@ -1,5 +1,5 @@
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features import build_feature_vector
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features import build_feature_vector
 
 
 def test_feature_vector_has_expected_keys():

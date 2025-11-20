@@ -7,8 +7,8 @@ Uptrend Holdings Limited ("UPX") and computes its risk score.
 
 from __future__ import annotations
 
-from domain.risk.engine import compute_ipo_risk
-from domain.risk.entities import (
+from ipo_risk_score.domain.risk.engine import compute_ipo_risk
+from ipo_risk_score.domain.risk.entities import (
     DealTermsDomain,
     FinancialSnapshotDomain,
     IpoInput,

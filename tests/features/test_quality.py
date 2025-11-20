@@ -1,5 +1,5 @@
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.quality import compute_quality_features
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.quality import compute_quality_features
 
 
 def test_quality_features_valid_range():

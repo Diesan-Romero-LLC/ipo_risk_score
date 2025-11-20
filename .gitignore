@@ -579,5 +579,6 @@ $RECYCLE.BIN/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+ipo
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,python,latex,database,venv

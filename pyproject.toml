@@ -10,11 +10,21 @@ readme = "README.md"
 authors = [
     { name = "Diesan Romero", email = "me@diesanromero.com" }
 ]
-license = { text = "MIT" }
+license = "MIT"
 requires-python = ">=3.9"
 keywords = ["ipo", "risk", "finance", "quant", "logistic-model", "markets"]
 
 dependencies = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -32,7 +42,7 @@ Repository = "https://github.com/Diesan-Romero-LLC/ipo_risk_score"
 package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
-include = ["domain*", "examples*"]
+include = ["ipo_risk_score*"]
 
 # =====================================================================
 # TOOL CONFIGURATION

@@ -1,5 +1,5 @@
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.valuation import compute_valuation_feature
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.valuation import compute_valuation_feature
 
 
 def test_valuation_reasonable_range():

@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from domain.risk.logistic import (
+from ipo_risk_score.domain.risk.logistic import (
     COEFFS_V1,
     FEATURE_MAX_SAFE,
     risk_score_from_features,

@@ -1,7 +1,7 @@
 import pytest
 
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.validators import ValidationError, validate_ipo_input
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.validators import ValidationError, validate_ipo_input
 
 
 def _build_base_ipo() -> IpoInput:

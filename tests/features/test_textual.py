@@ -1,8 +1,8 @@
 """Pruebas para el feature de sentimiento textual."""
 
-from domain.risk.engine import compute_ipo_risk
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.textual import compute_textual_features
+from ipo_risk_score.domain.risk.engine import compute_ipo_risk
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.textual import compute_textual_features
 
 
 def _dummy_ipo() -> IpoInput:

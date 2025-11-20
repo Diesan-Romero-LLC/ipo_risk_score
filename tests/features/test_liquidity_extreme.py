@@ -1,7 +1,7 @@
 """Pruebas para escenarios de liquidez extremos."""
 
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.liquidity import compute_liquidity_features
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.liquidity import compute_liquidity_features
 
 
 def _make_ipo(free_float_pct: float, lockup_days: int) -> IpoInput:

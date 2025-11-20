@@ -1,5 +1,5 @@
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.context import compute_context_features
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.context import compute_context_features
 
 
 def test_context_feature_valid_range():

@@ -1,5 +1,5 @@
-from domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
-from domain.risk.features.liquidity import compute_liquidity_features
+from ipo_risk_score.domain.risk.entities import DealTermsDomain, FinancialSnapshotDomain, IpoInput
+from ipo_risk_score.domain.risk.features.liquidity import compute_liquidity_features
 
 
 def test_liquidity_basic_values():

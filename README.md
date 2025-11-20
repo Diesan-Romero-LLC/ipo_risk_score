@@ -7,6 +7,22 @@ The reference model and notation are described in the LaTeX document `ipo_risk_s
 
 ---
 
+## Installation
+
+Requires Python 3.9+.
+
+```bash
+pip install ipo-risk-score
+```
+
+Then import the API via `ipo_risk_score.domain.risk`, for example:
+
+```python
+from ipo_risk_score.domain.risk import compute_ipo_risk, IpoInput
+```
+
+---
+
 ## Overview
 
 The core components of the model are:
