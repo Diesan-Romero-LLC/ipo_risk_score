@@ -1,0 +1,70 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to publish (e.g., v0.1.0). Defaults to the current branch ref."
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate tag matches project version
+        id: version_check
+        run: |
+          import pathlib, sys, tomllib, os
+
+          pyproject = pathlib.Path("pyproject.toml")
+          data = tomllib.loads(pyproject.read_text())
+          version = data["project"]["version"]
+
+          # Tag comes from input (manual dispatch) or the ref (release event)
+          tag_input = os.environ.get("TAG_INPUT") or ""
+          ref = os.environ.get("GITHUB_REF", "")
+          tag = tag_input or ref.rsplit("/", 1)[-1]
+
+          expected_tag = f"v{version}"
+          if tag != expected_tag:
+            print(f"::error::Tag '{tag}' does not match project version '{version}' (expected {expected_tag})")
+            sys.exit(1)
+          print(f"Version {version} matches tag {tag}")
+        env:
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build twine
+
+      - name: Build distribution
+        run: python -m build
+
+      - name: Check built artifacts
+        run: python -m twine check dist/*
+
+      - name: Publish to PyPI
+        if: env.PYPI_TOKEN != ''
+        run: python -m twine upload --non-interactive -u __token__ -p "$PYPI_TOKEN" dist/*
+
+      - name: Fail when PyPI token is missing
+        if: env.PYPI_TOKEN == ''
+        run: |
+          echo "::error::PYPI_TOKEN secret is not set. Add it to the repository secrets to enable publishing."
+          exit 1
